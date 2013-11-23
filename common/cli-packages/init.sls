@@ -1,7 +1,7 @@
 cli-packages:
   pkg.installed:
     - pkgs:
-      - joe
-      - wget
+      - name: joe
+      - name: wget
 
 # expect-dev : autoexpect
