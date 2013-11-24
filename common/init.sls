@@ -3,6 +3,7 @@ corepkgs:
     - names:
       - wget
       - joe
+      - lsof
 
 unneededpkgs:
   pkg.purged:
