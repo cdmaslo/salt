@@ -18,4 +18,4 @@ iptables:
   cmd.wait:
     - name: iptables-restore < /etc/iptables/rules
     - watch:
-      - git: /etc/iptables/rules  
+      - file: /etc/iptables/rules  
