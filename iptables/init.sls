@@ -14,3 +14,8 @@ iptables:
         limit_tcp_ports: {{ pillar.get('limit_tcp_ports', [22]) }}
     - require:
       - pkg: iptables
+
+  cmd.wait:
+    - name: iptables-restore < /etc/iptables/rules
+    - watch:
+      - git: /etc/iptables/rules  
