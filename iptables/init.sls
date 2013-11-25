@@ -15,7 +15,16 @@ iptables:
     - require:
       - pkg: iptables
 
+compare_running_iptables:
+  file.diff:
+        
+    - require:
+      - file: /etc/iptables/rules
+      - pkg: iptables
+
   cmd.wait:
     - name: iptables-restore < /etc/iptables/rules
     - watch:
       - file: /etc/iptables/rules  
+      - pkg: iptables
+      

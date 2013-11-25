@@ -1,17 +1,17 @@
 *filter
-:INPUT DROP [0:0]
-:FORWARD DROP [0:0]
-:OUTPUT ACCEPT [0:0]
-:TCP - [0:0]
-:UDP - [0:0]
+-P INPUT DROP
+-P FORWARD DROP
+-P OUTPUT ACCEPT
+-N TCP
+-N UDP
 -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -m conntrack --ctstate INVALID -j DROP
--A INPUT -p icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
 -A INPUT -p udp -m conntrack --ctstate NEW -j UDP
--A INPUT -p tcp --syn -m conntrack --ctstate NEW -j TCP
+-A INPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m conntrack --ctstate NEW -j TCP
 -A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable
--A INPUT -p tcp -j REJECT --reject-with tcp-rst
+-A INPUT -p tcp -j REJECT --reject-with tcp-reset
 -A INPUT -j REJECT --reject-with icmp-proto-unreachable
 
 {%- if accept_tcp_ports|length > 0 %}
@@ -25,8 +25,8 @@
 {%- endfor %}
 
 {%- for port in limit_tcp_ports %}
--A TCP -p tcp --dport {{ port }} -m recent --update --name limit-tcp-{{ port}} --hitcount 3 --seconds 30 -j REJECT --reject-with icmp-port-unreachable
--A TCP -p tcp --dport {{ port }} -m recent --set --name limit-tcp-{{ port}} -j ACCEPT
+-A TCP -p tcp -m tcp --dport {{ port }} -m recent --update --seconds 30 --hitcount 3 --name limit-tcp-{{ port }} --mask 255.255.255.255 --rsource -j REJECT --reject-with icmp-port-unreachable
+-A TCP -p tcp -m tcp --dport {{ port }} -m recent --set --name limit-tcp-{{ port }} --mask 255.255.255.255 --rsource -j ACCEPT
 {%- endfor %}
 COMMIT
 {# Enforce newline #}
