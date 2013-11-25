@@ -28,5 +28,4 @@ compare_running_iptables:
     -name: cat /etc/iptables/rules | grep -E "^COMMIT$|^\*filter$|^#.*$|^$" --invert-match > /tmp/iptables.rules.orig ; iptables -S > /tmp/iptables.rules.active 
   file.get_diff:
     - minionfile:  /tmp/iptables.rules.active
-    -  masterfile: file:/tmp/iptables.rules.orig
-		
+    - masterfile: file:/tmp/iptables.rules.orig
