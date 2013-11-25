@@ -15,16 +15,18 @@ iptables:
     - require:
       - pkg: iptables
 
-compare_running_iptables:
-  file.diff:
-        
-    - require:
-      - file: /etc/iptables/rules
-      - pkg: iptables
-
+reload_rules:
   cmd.wait:
     - name: iptables-restore < /etc/iptables/rules
     - watch:
       - file: /etc/iptables/rules  
       - pkg: iptables
+      - pkg: compare_running_iptables
       
+compare_running_iptables:
+  cmd.run:
+    -name: cat /etc/iptables/rules | grep -E "^COMMIT$|^\*filter$|^#.*$|^$" --invert-match > /tmp/iptables.rules.orig ; iptables -S > /tmp/iptables.rules.active 
+  file.get_diff:
+    - minionfile:  /tmp/iptables.rules.active
+    -  masterfile: file:/tmp/iptables.rules.orig
+		
