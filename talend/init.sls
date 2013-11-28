@@ -2,7 +2,7 @@
   file.managed:
     - source: salt://../install/talend_latest.zip
     - require:
-      - pkg: jvm
+      - pkg: oracle-java7-installer
       - pkg: unzip
 
 /tmp/salt/talend_install.sh:
