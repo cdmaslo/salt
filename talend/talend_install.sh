@@ -1,16 +1,17 @@
 #!/bin/bash
 #
-cat /etc/iptables/rules | grep -E "^COMMIT$|^\*filter$|^#.*$|^$" --invert-match > /tmp/iptables.rules.orig
 
-iptables -S > /tmp/iptables.rules.active
+rm -rf /usr/local/bin/talend
+mkdir /usr/local/bin/talend
 
-diff /tmp/iptables.rules.orig /tmp/iptables.rules.active
+unzip "/tmp/salt/install/talend_latest.zip" "Runtime_ESBSE/*" -d "/usr/local/bin/talend"
+
 
 # writing the state line
 echo  # an empty line here so the next line will be the last.
 if [ $? -eq 0 ]
 then
-  echo "changed=no comment='nothing has changed' whatever=123"
+  echo "changed=yes comment='installed OK' whatever=123"
 else
-  echo "changed=yes comment='something has changed' whatever=123"
+  echo "changed=no comment='error during unzip' whatever=123"
 fi
