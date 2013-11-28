@@ -1,5 +1,7 @@
 base:
   '*':
-#    - common
-#    - jvm
+    - base_setup
+    - common
+    - jvm
     - iptables
+    - talend

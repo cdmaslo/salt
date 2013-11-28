@@ -4,6 +4,7 @@ corepkgs:
       - wget
       - joe
       - lsof
+      - unzip
 
 unneededpkgs:
   pkg.purged:
